@@ -1,0 +1,14 @@
+# default gateway address
+DEFAULT_GATEWAY="127.0.0.1"
+
+# checking interval (seconds)
+INTERVAL=60
+
+# max consecutive failed attempts before scheduling reboot
+MAX_FAILS=5
+
+# number of packets for every ping iteration
+PING_COUNT=3
+
+# delay before rebooting after reaching MAX_FAILS (minutes)
+REBOOT_DELAY=3

@@ -1,0 +1,11 @@
+[Unit]
+Description=rpi_network_watchdog
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/rpi_network_watchdog.sh
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
