@@ -1,7 +1,7 @@
 #!/bin/bash -u
 
 # shellcheck disable=SC1091
-[ -e /etc/default/rpi_watchdog ] && . /etc/default/rpi_watchdog
+[ -e /etc/default/rpi_network_watchdog ] && . /etc/default/rpi_network_watchdog
 
 log() {
     printf "%s\n" "$@"
