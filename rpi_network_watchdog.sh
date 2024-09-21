@@ -40,9 +40,9 @@ while true; do
         extra_msg=""
     fi
 
-    if (( fails > MAX_FAILS )); then
+    if (( fails >= MAX_FAILS )); then
         if (( reboot_pending == 0 )); then
-            extra_msg=", rebooting in ${REBOOT_DELAY} minute(s)"
+            extra_msg=", scheduling reboot in ${REBOOT_DELAY} minute(s)"
             shutdown -r "+${REBOOT_DELAY}" "default gateway is unrechable"
             reboot_pending=1
         else
@@ -50,7 +50,9 @@ while true; do
         fi
     fi
 
-    log "last_attempt=${last_attempt} fails=${fails}${extra_msg}"
+    if (( fails > 0 )); then
+        log "last_attempt=${last_attempt} fails=${fails}${extra_msg}"
+    fi
 
     sleep "${INTERVAL}"
 done
