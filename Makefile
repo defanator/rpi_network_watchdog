@@ -11,20 +11,26 @@ lint: ## Run shellcheck linter
 	shellcheck *.sh
 
 .PHONY: install-binary
-install-binary:
+install-binary: ## Install watchdog script to /usr/bin
 	install -m 755 rpi_network_watchdog.sh /usr/bin/
 
 .PHONY: install-service
-install-service:
+install-service: ## Install watchdog service to /etc/systemd/system
 	install -m 644 rpi_network_watchdog.service /etc/systemd/system/
 	systemctl daemon-reload
 
 .PHONY: install-default
-install-default:
+install-default: ## Install default watchdog config to /etc/default
+	[ -e /etc/default/rpi_network_watchdog ] && \
+	( \
+		echo "/etc/default/rpi_network_watchdog already exists; diff follows:" ; \
+		diff -u rpi_network_watchdog.default /etc/default/rpi_network_watchdog ; \
+		exit 2 ; \
+	)
 	install -m 644 rpi_network_watchdog.default /etc/default/rpi_network_watchdog
 
 .PHONY: install
-install: install-binary install-service install-default ## Install watchdog
+install: install-binary install-service install-default ## Install script, service, and default config
 
 .PHONY: enable-service
 enable-service: ## Enable watchdog service
