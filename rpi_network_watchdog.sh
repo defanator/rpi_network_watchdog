@@ -23,21 +23,26 @@ _watchdog_setup
 
 fails=0
 reboot_pending=0
+log_iteration=0
 extra_msg=""
 
 while true; do
     if ! ping -c "${PING_COUNT}" "${DEFAULT_GATEWAY}" >/dev/null 2>&1; then
         fails=$((fails + 1))
         last_attempt=1
+        log_iteration=1
     else
+        if (( fails > 0 )); then
+            log_iteration=1
+            extra_msg=", default gateway is reachable again"
+        fi
         last_attempt=0
         fails=0
         if (( reboot_pending > 0 )); then
-            log "canceling reboot"
+            extra_msg="${extra_msg}, canceling reboot"
             shutdown -c
             reboot_pending=0
         fi
-        extra_msg=""
     fi
 
     if (( fails >= MAX_FAILS )); then
@@ -50,8 +55,10 @@ while true; do
         fi
     fi
 
-    if (( fails > 0 )); then
+    if (( log_iteration > 0 )); then
         log "last_attempt=${last_attempt} fails=${fails}${extra_msg}"
+        log_iteration=0
+        extra_msg=""
     fi
 
     sleep "${INTERVAL}"
